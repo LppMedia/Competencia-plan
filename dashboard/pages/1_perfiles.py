@@ -13,7 +13,7 @@ from components.data_loader import (
     load_raw_instagram_profiles, load_raw_instagram_posts,
     load_all_images_b64, posts_by_user, engagement_rate,
     detect_cta, detect_location, pricing_estimate,
-    get_profile_b64, get_post_b64,
+    get_profile_b64, get_post_b64, get_post_img_b64,
 )
 
 st.set_page_config(page_title="Perfiles · Lpp Media", page_icon="👤", layout="wide")
@@ -135,12 +135,16 @@ else:
 
             posts_html = ""
             for post in top3_posts:
-                pb64       = get_post_b64(u, post.get("shortCode", ""), img_cache)
+                sc_code    = post.get("shortCode", "")
+                pb64       = get_post_img_b64(u, sc_code)
                 post_url   = post.get("displayUrl", "") or ""
                 likes      = post.get("likesCount", 0)
                 comments   = post.get("commentsCount", 0)
+                ig_post_url = f"https://www.instagram.com/p/{sc_code}/" if sc_code else ""
+                link_open  = f'<a href="{ig_post_url}" target="_blank" style="display:block;position:relative;">' if ig_post_url else '<div style="position:relative;">'
+                link_close = '</a>' if ig_post_url else '</div>'
                 if pb64:
-                    posts_html += f'<div style="position:relative;"><img src="data:image/jpeg;base64,{pb64}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;"><div style="position:absolute;bottom:4px;left:4px;font-size:10px;background:#000a;color:#fff;padding:2px 6px;border-radius:4px;">❤️ {likes:,}</div></div>'
+                    posts_html += f'{link_open}<img src="data:image/jpeg;base64,{pb64}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;"><div style="position:absolute;bottom:4px;left:4px;font-size:10px;background:#000a;color:#fff;padding:2px 6px;border-radius:4px;">❤️ {likes:,}</div>{link_close}'
                 elif post_url:
                     posts_html += f'<div style="position:relative;"><img src="{post_url}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div style="display:none;background:linear-gradient(135deg,#1a1a2e,#16213e);height:80px;border-radius:8px;flex-direction:column;align-items:center;justify-content:center;"><div style="font-size:11px;font-weight:700;color:#ef4444;">❤️ {likes:,}</div><div style="font-size:10px;color:#888;">💬 {comments:,}</div></div></div>'
                 else:

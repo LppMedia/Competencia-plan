@@ -42,7 +42,7 @@ def main():
                         ok += 1
                 else:
                     ok += 1
-        print(f"  → {ok}/{len(profiles)} profile images ready")
+        print(f"  -> {ok}/{len(profiles)} profile images ready")
     else:
         print(f"WARN: {profiles_path} not found. Run run_collection.py first.")
 
@@ -63,7 +63,7 @@ def main():
                         ok += 1
                 else:
                     ok += 1
-        print(f"  → {ok}/{len(posts)} post images ready")
+        print(f"  -> {ok}/{len(posts)} post images ready")
     else:
         print(f"WARN: {posts_path} not found. Run run_collection.py first.")
 
